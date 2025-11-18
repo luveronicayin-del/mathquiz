@@ -1,560 +1,530 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.1">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #4689cc; -webkit-text-stroke: #4689cc}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #c27e65; -webkit-text-stroke: #c27e65}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #8cd3fe; -webkit-text-stroke: #8cd3fe}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca; min-height: 16.0px}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d7378; -webkit-text-stroke: #6d7378}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #b76ff7; -webkit-text-stroke: #b76ff7}
-    span.s1 {font-kerning: none; background-color: #171818}
-    span.s2 {font-kerning: none; color: #8cd3fe; background-color: #171818; -webkit-text-stroke: 0px #8cd3fe}
-    span.s3 {font-kerning: none; color: #6d6d6d; background-color: #171818; -webkit-text-stroke: 0px #6d6d6d}
-    span.s4 {font-kerning: none; color: #4689cc; background-color: #171818; -webkit-text-stroke: 0px #4689cc}
-    span.s5 {font-kerning: none; color: #cacaca; background-color: #171818; -webkit-text-stroke: 0px #cacaca}
-    span.s6 {font-kerning: none; color: #c27e65; background-color: #171818; -webkit-text-stroke: 0px #c27e65}
-    span.s7 {font-kerning: none}
-    span.s8 {font-kerning: none; color: #d4d4d4; background-color: #171818; -webkit-text-stroke: 0px #d4d4d4}
-    span.s9 {font-kerning: none; color: #a7c598; background-color: #171818; -webkit-text-stroke: 0px #a7c598}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>班級作業進度賽跑榜</title>
+  
+  <!-- 1. 載入 Tailwind CSS (樣式) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 2. 載入 React 和 Babel (核心) -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- 3. 設定 Import Map (讓瀏覽器知道哪裡找 Firebase 和 Icon) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+      }
+    }
+  </script>
+
+  <style>
+    /* 自定義動畫 */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .animate-shimmer {
+      animation: shimmer 2s infinite;
+    }
   </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s4">html</span><span class="s5"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s1">"zh-TW"</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s6">"UTF-8"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">title</span><span class="s3">&gt;</span><span class="s1">班級作業進度賽跑榜</span><span class="s3">&lt;/</span><span class="s4">title</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;!-- 1. 載入 Tailwind CSS (樣式) --&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.tailwindcss.com"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">  </span></span></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;!-- 2. 載入 React 和 Babel (核心) --&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/react@18/umd/react.development.js"</span><span class="s5"> </span><span class="s2">crossorigin</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/react-dom@18/umd/react-dom.development.js"</span><span class="s5"> </span><span class="s2">crossorigin</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/@babel/standalone/babel.min.js"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;!-- 3. 設定 Import Map (讓瀏覽器知道哪裡找 Firebase 和 Icon) --&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"importmap"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>"imports": {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>"firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>"firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>"firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>"lucide-react": "https://esm.sh/lucide-react@0.263.1"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s1">/* 自定義動畫 */</span></p>
-<p class="p7"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s1">@keyframes</span><span class="s5"> </span><span class="s6">shimmer</span><span class="s5"> </span><span class="s8">{</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">      </span></span><span class="s9">0%</span><span class="s5"> </span><span class="s8">{</span><span class="s5"> </span><span class="s2">transform:</span><span class="s5"> </span><span class="s1">translateX(</span><span class="s9">-100%</span><span class="s1">)</span><span class="s8">;</span><span class="s5"> </span><span class="s8">}</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">      </span></span><span class="s9">100%</span><span class="s5"> </span><span class="s8">{</span><span class="s5"> </span><span class="s2">transform:</span><span class="s5"> </span><span class="s1">translateX(</span><span class="s9">100%</span><span class="s1">)</span><span class="s8">;</span><span class="s5"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s1">.animate-shimmer</span><span class="s5"> </span><span class="s8">{</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">      </span></span><span class="s2">animation:</span><span class="s5"> </span><span class="s1">shimmer</span><span class="s5"> </span><span class="s9">2s</span><span class="s5"> </span><span class="s1">infinite</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s8">}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s4">body</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-slate-950 text-slate-100"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"root"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s1">&lt;!-- 4. 主要程式碼 (React 邏輯) --&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"text/babel"</span><span class="s5"> </span><span class="s2">data-type</span><span class="s3">=</span><span class="s1">"module"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>import { initializeApp } from 'firebase/app';</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>import {<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>getFirestore, collection, doc, setDoc, onSnapshot,<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>serverTimestamp, query, orderBy, increment, updateDoc, getDoc<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>} from 'firebase/firestore';</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>import {<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>getAuth, signInAnonymously, onAuthStateChanged<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>} from 'firebase/auth';</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>import { Trophy, User, BarChart3, CheckCircle2, Medal, Activity, Loader2, AlertCircle, ExternalLink, Globe } from 'lucide-react';</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// --- 設定區 ---</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const firebaseConfig = {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>apiKey: "AIzaSyAjmg0KXLaR_Z6Bj_nwyLN2Z2QPBOPMLvw",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>authDomain: "math-smart1.firebaseapp.com",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>projectId: "math-smart1",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>storageBucket: "math-smart1.firebasestorage.app",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>messagingSenderId: "867006036032",</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>appId: "1:867006036032:web:bb23af4520c316b5ad07a5"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const APP_ID = "math-class-2024";</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// 初始化 Firebase</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const app = initializeApp(firebaseConfig);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const auth = getAuth(app);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const db = getFirestore(app);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// --- 元件 ---</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const LoginScreen = ({ onJoin, isTeacher, setIsTeacher, authReady }) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [name, setName] = React.useState('');</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [loading, setLoading] = React.useState(false);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const handleJoin = async () =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!name.trim()) return;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>setLoading(true);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>await onJoin(name);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>setLoading(false);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-slate-100"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div className="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="bg-blue-600 p-6 text-center"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;Activity className="w-12 h-12 text-white mx-auto mb-2" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;h1 className="text-2xl font-bold text-white"&gt;數學作業衝刺賽&lt;/h1&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;p className="text-blue-200 text-sm"&gt;2-1 至 2-4 進度追蹤&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="p-8 space-y-6"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;label className="block text-sm font-medium text-slate-300 mb-2"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>輸入你的名字開始</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/label&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>type="text"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>value={name}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>onChange={(e) =&gt; setName(e.target.value)}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>placeholder="例如：王小明"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white placeholder-slate-400 transition-all"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>onKeyDown={(e) =&gt; e.key === 'Enter' &amp;&amp; handleJoin()}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>disabled={!authReady}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>/&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;button</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>onClick={handleJoin}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>disabled={loading || !name.trim() || !authReady}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{!authReady ? '連線中...' : loading ? '加入中...' : '開始做題！'}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="pt-4 border-t border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;button</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>onClick={() =&gt; setIsTeacher(true)}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>disabled={!authReady}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>className="w-full text-sm text-slate-500 hover:text-slate-300 transition-colors disabled:opacity-50"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>我是老師 (開啟白板模式)</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const LoadingScreen = () =&gt; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-500" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p&gt;正在恢復你的進度...&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// 錯誤顯示畫面 (智慧判斷錯誤類型)</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const ErrorScreen = ({ error }) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const isDomainError = error.code === 'auth/unauthorized-domain';</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const isConfigError = error.code === 'auth/configuration-not-found';</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen bg-slate-950 flex items-center justify-center p-4"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div className="max-w-lg w-full bg-slate-900 border border-red-800 rounded-xl p-6 shadow-2xl"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="flex items-center gap-3 mb-4 text-red-500"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;AlertCircle className="w-8 h-8" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;h2 className="text-xl font-bold"&gt;連線設定問題&lt;/h2&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="space-y-4 text-slate-300"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>Firebase 回傳錯誤：&lt;code className="bg-red-900/30 px-2 py-1 rounded text-red-300 text-sm"&gt;{error.code}&lt;/code&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/p&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{isDomainError &amp;&amp; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;p className="font-bold text-white mb-2 flex items-center gap-2"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;Globe className="w-4 h-4" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>這是網域授權問題：</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;p className="mb-2"&gt;因為您已將網站發布上線，必須告訴 Firebase 這個新網址是安全的。&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;ol className="list-decimal list-inside space-y-2 text-slate-400 ml-1"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;複製您現在瀏覽器網址列上的網域 (例如: &lt;code&gt;myapp.vercel.app&lt;/code&gt;)。&lt;/li&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;前往 &lt;a href="https://console.firebase.google.com/project/math-smart1/authentication/settings" target="_blank" className="text-blue-400 underline"&gt;Firebase Authentication 設定&lt;/a&gt;。&lt;/li&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;點擊 &lt;strong&gt;Authorized domains (已授權網域)&lt;/strong&gt;。&lt;/li&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;點擊 &lt;strong&gt;Add domain&lt;/strong&gt; 並貼上網址。&lt;/li&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/ol&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>)}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{isConfigError &amp;&amp; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;p className="font-bold text-white mb-2"&gt;需要開啟匿名登入：&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;p&gt;請前往 Firebase Console &gt; Authentication &gt; Sign-in method 開啟 Anonymous。&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>)}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>{!isDomainError &amp;&amp; !isConfigError &amp;&amp; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p&gt;未知的錯誤，請檢查 Firebase 設定或重新整理。&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>)}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;button<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>onClick={() =&gt; window.location.reload()}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>我已經設定好了，重新整理</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const StudentView = ({ user, userData }) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [activeSection, setActiveSection] = React.useState('2-1');</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const sections = ['2-1', '2-2', '2-3', '2-4'];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const totalQuestionsPerSection = 24;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const toggleQuestion = async (section, questionIndex) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!user) return;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const currentSectionProgress = userData?.progress?.[section] || [];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const isCompleted = currentSectionProgress.includes(questionIndex);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>let newProgress = [...currentSectionProgress];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (isCompleted) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>newProgress = newProgress.filter(i =&gt; i !== questionIndex);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>newProgress.push(questionIndex);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>await updateDoc(userDocRef, {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>[`progress.${section}`]: newProgress,</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>lastUpdated: serverTimestamp()</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const calculateProgress = (section) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const completed = userData?.progress?.[section]?.length || 0;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return Math.round((completed / totalQuestionsPerSection) * 100);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-10 shadow-md"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="flex justify-between items-center max-w-3xl mx-auto"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="flex items-center space-x-3"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>{userData?.name?.[0] || '生'}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;h2 className="font-bold text-lg leading-tight"&gt;{userData?.name}&lt;/h2&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;p className="text-xs text-slate-400"&gt;加油，保持專注！&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="text-right"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div className="text-xs text-slate-400"&gt;總完成題數&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div className="text-xl font-mono font-bold text-green-400"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                   </span>{Object.values(userData?.progress || {}).flat().length} / {sections.length * 24}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/header&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div className="flex overflow-x-auto bg-slate-900/50 border-b border-slate-800 p-2 space-x-2 sticky top-[73px] z-10"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>{sections.map(sec =&gt; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;button</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>key={sec}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>onClick={() =&gt; setActiveSection(sec)}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>className={`flex-1 py-2 px-4 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>activeSection === sec<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>: 'bg-slate-800 text-slate-400 hover:bg-slate-700'</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>}`}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>{sec} &lt;span className="ml-1 opacity-60 text-xs"&gt;({calculateProgress(sec)}%)&lt;/span&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>))}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div className="flex-1 p-4 overflow-y-auto max-w-3xl mx-auto w-full"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="mb-6"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;h3 className="text-slate-400 text-sm uppercase tracking-wider font-semibold mb-4 flex items-center"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;CheckCircle2 className="w-4 h-4 mr-2" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>點擊完成的題目 ({activeSection})</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;/h3&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">               </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;div className="grid grid-cols-4 sm:grid-cols-6 gap-3"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>{Array.from({ length: totalQuestionsPerSection }).map((_, idx) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                   </span>const qNum = idx + 1;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                   </span>const isDone = userData?.progress?.[activeSection]?.includes(qNum);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                   </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                   </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&lt;button</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>key={qNum}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>onClick={() =&gt; toggleQuestion(activeSection, qNum)}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>className={`aspect-square rounded-xl flex items-center justify-center text-lg font-bold transition-all duration-200 transform active:scale-90 ${</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                         </span>isDone<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                           </span>? 'bg-green-500 text-white shadow-lg shadow-green-500/40 border-b-4 border-green-700 translate-y-[2px]'<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                           </span>: 'bg-slate-800 text-slate-500 border-b-4 border-slate-700 hover:bg-slate-750'</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>}`}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>{qNum}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&lt;/button&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                   </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>})}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const TeacherDashboard = ({ students }) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const sections = ['2-1', '2-2', '2-3', '2-4'];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const totalPerSection = 24;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const totalQuestions = sections.length * totalPerSection;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const sortedStudents = React.useMemo(() =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return [...students].sort((a, b) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const countA = Object.values(a.progress || {}).flat().length;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const countB = Object.values(b.progress || {}).flat().length;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>return countB - countA;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}, [students]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const getStudentTotal = (student) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return Object.values(student.progress || {}).flat().length;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const getSectionProgress = (student, section) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return (student.progress?.[section] || []).length;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div className="min-h-screen bg-slate-900 text-white p-6 overflow-hidden flex flex-col"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;header className="mb-6 flex justify-between items-center bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-700"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="flex items-center gap-3"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div className="p-3 bg-yellow-500 rounded-xl"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;Trophy className="w-8 h-8 text-white" /&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>即時進度排行榜</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/h1&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p className="text-slate-400"&gt;總題數: {totalQuestions} 題 (每單元 24 題)&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div className="text-right"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;div className="text-3xl font-mono font-bold text-blue-400"&gt;{students.length}&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;div className="text-xs text-slate-500 uppercase tracking-wider"&gt;在線人數&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/header&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;div className="flex-1 overflow-y-auto pr-2 space-y-3"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>{sortedStudents.map((student, index) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const totalDone = getStudentTotal(student);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>const percentage = Math.min(100, (totalDone / totalQuestions) * 100);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>let rankColor = "text-slate-400";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>let bgColor = "bg-slate-800";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>let medal = null;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">              </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>if (index === 0 &amp;&amp; totalDone &gt; 0) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>rankColor = "text-yellow-400";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>bgColor = "bg-slate-800 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>medal = &lt;Medal className="w-6 h-6 text-yellow-400 fill-yellow-400/20" /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>} else if (index === 1 &amp;&amp; totalDone &gt; 0) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>rankColor = "text-slate-300";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>medal = &lt;Medal className="w-6 h-6 text-slate-300" /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>} else if (index === 2 &amp;&amp; totalDone &gt; 0) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>rankColor = "text-orange-400";</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>medal = &lt;Medal className="w-6 h-6 text-orange-400" /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div key={student.id} className={`relative rounded-xl p-4 transition-all duration-500 ${bgColor}`}&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="flex items-center gap-4 mb-2 relative z-10"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className={`font-mono font-bold text-xl w-8 text-center ${rankColor}`}&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>#{index + 1}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className="flex-1 min-w-0"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;div className="flex items-center gap-2"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 className="text-xl font-bold truncate"&gt;{student.name}&lt;/h3&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span>{medal}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div className="text-right"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;span className="text-2xl font-bold font-mono text-blue-400"&gt;{totalDone}&lt;/span&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>&lt;span className="text-slate-500 text-sm"&gt; / {totalQuestions}&lt;/span&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="h-4 bg-slate-700/50 rounded-full overflow-hidden mb-3 relative"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&lt;div<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>className="h-full bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 transition-all duration-700 ease-out relative"</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>style={{ width: `${percentage}%` }}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                       </span>&lt;div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" style={{backgroundSize: '200% 100%'}}&gt;&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                     </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;div className="grid grid-cols-4 gap-2 text-xs text-slate-400"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>{sections.map(sec =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>const secProgress = getSectionProgress(student, sec);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>const isDone = secProgress === totalPerSection;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>return (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div key={sec} className="flex items-center gap-2 bg-slate-900/50 rounded px-2 py-1"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                          </span>&lt;span className={`${isDone ? 'text-green-400 font-bold' : ''}`}&gt;{sec}&lt;/span&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                          </span>&lt;div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                              </span>className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-green-500' : 'bg-blue-500'}`}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                              </span>style={{ width: `${(secProgress / totalPerSection) * 100}%` }}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span>/&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                          </span>&lt;span className="font-mono w-5 text-right"&gt;{secProgress}&lt;/span&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                      </span>)</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>})}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">              </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>})}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>{sortedStudents.length === 0 &amp;&amp; (</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;div className="text-center py-20 text-slate-500"&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;p className="text-xl"&gt;等待學生加入...&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;p className="text-sm mt-2"&gt;請學生輸入名字加入課堂&lt;/p&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">               </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>)}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// --- 主程式 ---</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const App = () =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [user, setUser] = React.useState(null);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [userData, setUserData] = React.useState(null);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [students, setStudents] = React.useState([]);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [isTeacher, setIsTeacher] = React.useState(false);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [profileLoading, setProfileLoading] = React.useState(true);<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const [authError, setAuthError] = React.useState(null); // 新增錯誤狀態</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>React.useEffect(() =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const initAuth = async () =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>try {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>await signInAnonymously(auth);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>} catch (err) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>// 不再顯示紅色錯誤訊息，直接設定錯誤狀態讓 UI 顯示引導</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setAuthError(err);<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>initAuth();</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const unsubscribe = onAuthStateChanged(auth, (u) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>setUser(u);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>if (!u) setProfileLoading(false);<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return () =&gt; unsubscribe();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}, []);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>React.useEffect(() =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!user || isTeacher) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>if (isTeacher) setProfileLoading(false);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>return;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>setProfileLoading(true);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const unsub = onSnapshot(userDocRef, (docSnap) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>if (docSnap.exists()) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setUserData(docSnap.data());</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>} else {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>setUserData(null);<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>setProfileLoading(false);<span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}, (err) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">           </span>// 靜默錯誤處理，避免干擾 UI</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return () =&gt; unsub();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}, [user, isTeacher]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>React.useEffect(() =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!user) return;</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const studentsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'students');</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const q = query(studentsRef);<span class="Apple-converted-space"> </span></span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const unsub = onSnapshot(q, (snapshot) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>const studentsList = [];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>snapshot.forEach((doc) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>studentsList.push({ id: doc.id, ...doc.data() });</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>setStudents(studentsList);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}, (err) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>// 靜默錯誤處理</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return () =&gt; unsub();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}, [user]);</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>const handleJoin = async (name) =&gt; {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!user) return;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>const docSnap = await getDoc(userDocRef);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>if (!docSnap.exists()) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>await setDoc(userDocRef, {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>name,</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>joinedAt: serverTimestamp(),</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>progress: { '2-1': [], '2-2': [], '2-3': [], '2-4': [] }</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">          </span>});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>await updateDoc(userDocRef, { name });</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>// 如果發生 Auth 錯誤，優先顯示錯誤畫面</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>if (authError) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return &lt;ErrorScreen error={authError} /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>if (isTeacher) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return &lt;TeacherDashboard students={students} /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">      </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>if (profileLoading &amp;&amp; !isTeacher) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return &lt;LoadingScreen /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>if (!user || !userData) {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>return &lt;LoginScreen onJoin={handleJoin} isTeacher={isTeacher} setIsTeacher={setIsTeacher} authReady={!!user} /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>}</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">      </span>return &lt;StudentView user={user} userData={userData} /&gt;;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>};</span></p>
-<p class="p5"><span class="s7"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>// 渲染應用程式</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>const root = ReactDOM.createRoot(document.getElementById('root'));</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span>root.render(&lt;App /&gt;);</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">  </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+<body class="bg-slate-950 text-slate-100">
+  <div id="root"></div>
+
+  <!-- 4. 主要程式碼 (React 邏輯) -->
+  <script type="text/babel" data-type="module">
+    import { initializeApp } from 'firebase/app';
+    import { 
+      getFirestore, collection, doc, setDoc, onSnapshot, 
+      serverTimestamp, query, orderBy, increment, updateDoc, getDoc 
+    } from 'firebase/firestore';
+    import { 
+      getAuth, signInAnonymously, onAuthStateChanged 
+    } from 'firebase/auth';
+    import { Trophy, User, BarChart3, CheckCircle2, Medal, Activity, Loader2, AlertCircle, ExternalLink, Globe } from 'lucide-react';
+
+    // --- 設定區 ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjmg0KXLaR_Z6Bj_nwyLN2Z2QPBOPMLvw",
+      authDomain: "math-smart1.firebaseapp.com",
+      projectId: "math-smart1",
+      storageBucket: "math-smart1.firebasestorage.app",
+      messagingSenderId: "867006036032",
+      appId: "1:867006036032:web:bb23af4520c316b5ad07a5"
+    };
+
+    const APP_ID = "math-class-2024";
+
+    // 初始化 Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- 元件 ---
+
+    const LoginScreen = ({ onJoin, isTeacher, setIsTeacher, authReady }) => {
+      const [name, setName] = React.useState('');
+      const [loading, setLoading] = React.useState(false);
+
+      const handleJoin = async () => {
+        if (!name.trim()) return;
+        setLoading(true);
+        await onJoin(name);
+        setLoading(false);
+      };
+
+      return (
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-slate-100">
+          <div className="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
+            <div className="bg-blue-600 p-6 text-center">
+              <Activity className="w-12 h-12 text-white mx-auto mb-2" />
+              <h1 className="text-2xl font-bold text-white">數學作業衝刺賽</h1>
+              <p className="text-blue-200 text-sm">2-1 至 2-4 進度追蹤</p>
+            </div>
+            <div className="p-8 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  輸入你的名字開始
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="例如：王小明"
+                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white placeholder-slate-400 transition-all"
+                  onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+                  disabled={!authReady}
+                />
+              </div>
+              
+              <button
+                onClick={handleJoin}
+                disabled={loading || !name.trim() || !authReady}
+                className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30"
+              >
+                {!authReady ? '連線中...' : loading ? '加入中...' : '開始做題！'}
+              </button>
+
+              <div className="pt-4 border-t border-slate-700">
+                 <button
+                  onClick={() => setIsTeacher(true)}
+                  disabled={!authReady}
+                  className="w-full text-sm text-slate-500 hover:text-slate-300 transition-colors disabled:opacity-50"
+                >
+                  我是老師 (開啟白板模式)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const LoadingScreen = () => (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
+        <Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-500" />
+        <p>正在恢復你的進度...</p>
+      </div>
+    );
+
+    // 錯誤顯示畫面 (智慧判斷錯誤類型)
+    const ErrorScreen = ({ error }) => {
+      const isDomainError = error.code === 'auth/unauthorized-domain';
+      const isConfigError = error.code === 'auth/configuration-not-found';
+      
+      return (
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+          <div className="max-w-lg w-full bg-slate-900 border border-red-800 rounded-xl p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4 text-red-500">
+              <AlertCircle className="w-8 h-8" />
+              <h2 className="text-xl font-bold">連線設定問題</h2>
+            </div>
+            <div className="space-y-4 text-slate-300">
+              <p>
+                Firebase 回傳錯誤：<code className="bg-red-900/30 px-2 py-1 rounded text-red-300 text-sm">{error.code}</code>
+              </p>
+
+              {isDomainError && (
+                <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
+                  <p className="font-bold text-white mb-2 flex items-center gap-2">
+                    <Globe className="w-4 h-4" />
+                    這是網域授權問題：
+                  </p>
+                  <p className="mb-2">因為您已將網站發布上線，必須告訴 Firebase 這個新網址是安全的。</p>
+                  <ol className="list-decimal list-inside space-y-2 text-slate-400 ml-1">
+                    <li>複製您現在瀏覽器網址列上的網域 (例如: <code>myapp.vercel.app</code>)。</li>
+                    <li>前往 <a href="https://console.firebase.google.com/project/math-smart1/authentication/settings" target="_blank" className="text-blue-400 underline">Firebase Authentication 設定</a>。</li>
+                    <li>點擊 <strong>Authorized domains (已授權網域)</strong>。</li>
+                    <li>點擊 <strong>Add domain</strong> 並貼上網址。</li>
+                  </ol>
+                </div>
+              )}
+
+              {isConfigError && (
+                <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
+                  <p className="font-bold text-white mb-2">需要開啟匿名登入：</p>
+                  <p>請前往 Firebase Console > Authentication > Sign-in method 開啟 Anonymous。</p>
+                </div>
+              )}
+              
+              {!isDomainError && !isConfigError && (
+                 <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
+                    <p>未知的錯誤，請檢查 Firebase 設定或重新整理。</p>
+                 </div>
+              )}
+
+              <button 
+                onClick={() => window.location.reload()}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                我已經設定好了，重新整理
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const StudentView = ({ user, userData }) => {
+      const [activeSection, setActiveSection] = React.useState('2-1');
+      
+      const sections = ['2-1', '2-2', '2-3', '2-4'];
+      const totalQuestionsPerSection = 24;
+
+      const toggleQuestion = async (section, questionIndex) => {
+        if (!user) return;
+        
+        const currentSectionProgress = userData?.progress?.[section] || [];
+        const isCompleted = currentSectionProgress.includes(questionIndex);
+        
+        let newProgress = [...currentSectionProgress];
+        if (isCompleted) {
+          newProgress = newProgress.filter(i => i !== questionIndex);
+        } else {
+          newProgress.push(questionIndex);
+        }
+
+        const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);
+        
+        await updateDoc(userDocRef, {
+          [`progress.${section}`]: newProgress,
+          lastUpdated: serverTimestamp()
+        });
+      };
+
+      const calculateProgress = (section) => {
+        const completed = userData?.progress?.[section]?.length || 0;
+        return Math.round((completed / totalQuestionsPerSection) * 100);
+      };
+
+      return (
+        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+          <header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-10 shadow-md">
+            <div className="flex justify-between items-center max-w-3xl mx-auto">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg">
+                  {userData?.name?.[0] || '生'}
+                </div>
+                <div>
+                  <h2 className="font-bold text-lg leading-tight">{userData?.name}</h2>
+                  <p className="text-xs text-slate-400">加油，保持專注！</p>
+                </div>
+              </div>
+              <div className="text-right">
+                 <div className="text-xs text-slate-400">總完成題數</div>
+                 <div className="text-xl font-mono font-bold text-green-400">
+                   {Object.values(userData?.progress || {}).flat().length} / {sections.length * 24}
+                 </div>
+              </div>
+            </div>
+          </header>
+
+          <div className="flex overflow-x-auto bg-slate-900/50 border-b border-slate-800 p-2 space-x-2 sticky top-[73px] z-10">
+            {sections.map(sec => (
+              <button
+                key={sec}
+                onClick={() => setActiveSection(sec)}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
+                  activeSection === sec 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                }`}
+              >
+                {sec} <span className="ml-1 opacity-60 text-xs">({calculateProgress(sec)}%)</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 p-4 overflow-y-auto max-w-3xl mx-auto w-full">
+            <div className="mb-6">
+               <h3 className="text-slate-400 text-sm uppercase tracking-wider font-semibold mb-4 flex items-center">
+                 <CheckCircle2 className="w-4 h-4 mr-2" />
+                 點擊完成的題目 ({activeSection})
+               </h3>
+               
+               <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                 {Array.from({ length: totalQuestionsPerSection }).map((_, idx) => {
+                   const qNum = idx + 1;
+                   const isDone = userData?.progress?.[activeSection]?.includes(qNum);
+                   
+                   return (
+                     <button
+                       key={qNum}
+                       onClick={() => toggleQuestion(activeSection, qNum)}
+                       className={`aspect-square rounded-xl flex items-center justify-center text-lg font-bold transition-all duration-200 transform active:scale-90 ${
+                         isDone 
+                           ? 'bg-green-500 text-white shadow-lg shadow-green-500/40 border-b-4 border-green-700 translate-y-[2px]' 
+                           : 'bg-slate-800 text-slate-500 border-b-4 border-slate-700 hover:bg-slate-750'
+                       }`}
+                     >
+                       {qNum}
+                     </button>
+                   );
+                 })}
+               </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const TeacherDashboard = ({ students }) => {
+      const sections = ['2-1', '2-2', '2-3', '2-4'];
+      const totalPerSection = 24;
+      const totalQuestions = sections.length * totalPerSection;
+
+      const sortedStudents = React.useMemo(() => {
+        return [...students].sort((a, b) => {
+          const countA = Object.values(a.progress || {}).flat().length;
+          const countB = Object.values(b.progress || {}).flat().length;
+          return countB - countA;
+        });
+      }, [students]);
+
+      const getStudentTotal = (student) => {
+        return Object.values(student.progress || {}).flat().length;
+      };
+
+      const getSectionProgress = (student, section) => {
+        return (student.progress?.[section] || []).length;
+      };
+
+      return (
+        <div className="min-h-screen bg-slate-900 text-white p-6 overflow-hidden flex flex-col">
+          <header className="mb-6 flex justify-between items-center bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-700">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-yellow-500 rounded-xl">
+                 <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500">
+                  即時進度排行榜
+                </h1>
+                <p className="text-slate-400">總題數: {totalQuestions} 題 (每單元 24 題)</p>
+              </div>
+            </div>
+            <div className="text-right">
+               <div className="text-3xl font-mono font-bold text-blue-400">{students.length}</div>
+               <div className="text-xs text-slate-500 uppercase tracking-wider">在線人數</div>
+            </div>
+          </header>
+
+          <div className="flex-1 overflow-y-auto pr-2 space-y-3">
+            {sortedStudents.map((student, index) => {
+              const totalDone = getStudentTotal(student);
+              const percentage = Math.min(100, (totalDone / totalQuestions) * 100);
+              
+              let rankColor = "text-slate-400";
+              let bgColor = "bg-slate-800";
+              let medal = null;
+              
+              if (index === 0 && totalDone > 0) {
+                rankColor = "text-yellow-400";
+                bgColor = "bg-slate-800 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]";
+                medal = <Medal className="w-6 h-6 text-yellow-400 fill-yellow-400/20" />;
+              } else if (index === 1 && totalDone > 0) {
+                rankColor = "text-slate-300";
+                medal = <Medal className="w-6 h-6 text-slate-300" />;
+              } else if (index === 2 && totalDone > 0) {
+                rankColor = "text-orange-400";
+                medal = <Medal className="w-6 h-6 text-orange-400" />;
+              }
+
+              return (
+                <div key={student.id} className={`relative rounded-xl p-4 transition-all duration-500 ${bgColor}`}>
+                  <div className="flex items-center gap-4 mb-2 relative z-10">
+                    <div className={`font-mono font-bold text-xl w-8 text-center ${rankColor}`}>
+                      #{index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xl font-bold truncate">{student.name}</h3>
+                        {medal}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold font-mono text-blue-400">{totalDone}</span>
+                      <span className="text-slate-500 text-sm"> / {totalQuestions}</span>
+                    </div>
+                  </div>
+
+                  <div className="h-4 bg-slate-700/50 rounded-full overflow-hidden mb-3 relative">
+                     <div 
+                       className="h-full bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 transition-all duration-700 ease-out relative"
+                       style={{ width: `${percentage}%` }}
+                     >
+                       <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" style={{backgroundSize: '200% 100%'}}></div>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2 text-xs text-slate-400">
+                    {sections.map(sec => {
+                      const secProgress = getSectionProgress(student, sec);
+                      const isDone = secProgress === totalPerSection;
+                      return (
+                        <div key={sec} className="flex items-center gap-2 bg-slate-900/50 rounded px-2 py-1">
+                          <span className={`${isDone ? 'text-green-400 font-bold' : ''}`}>{sec}</span>
+                          <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-500 ${isDone ? 'bg-green-500' : 'bg-blue-500'}`}
+                              style={{ width: `${(secProgress / totalPerSection) * 100}%` }}
+                            />
+                          </div>
+                          <span className="font-mono w-5 text-right">{secProgress}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {sortedStudents.length === 0 && (
+               <div className="text-center py-20 text-slate-500">
+                 <p className="text-xl">等待學生加入...</p>
+                 <p className="text-sm mt-2">請學生輸入名字加入課堂</p>
+               </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    // --- 主程式 ---
+    const App = () => {
+      const [user, setUser] = React.useState(null);
+      const [userData, setUserData] = React.useState(null);
+      const [students, setStudents] = React.useState([]);
+      const [isTeacher, setIsTeacher] = React.useState(false);
+      const [profileLoading, setProfileLoading] = React.useState(true); 
+      const [authError, setAuthError] = React.useState(null); // 新增錯誤狀態
+
+      React.useEffect(() => {
+        const initAuth = async () => {
+          try {
+            await signInAnonymously(auth);
+          } catch (err) {
+            // 不再顯示紅色錯誤訊息，直接設定錯誤狀態讓 UI 顯示引導
+            setAuthError(err); 
+          }
+        };
+        initAuth();
+
+        const unsubscribe = onAuthStateChanged(auth, (u) => {
+          setUser(u);
+          if (!u) setProfileLoading(false); 
+        });
+        return () => unsubscribe();
+      }, []);
+
+      React.useEffect(() => {
+        if (!user || isTeacher) {
+            if (isTeacher) setProfileLoading(false);
+            return;
+        }
+
+        setProfileLoading(true);
+        const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);
+        const unsub = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          } else {
+            setUserData(null); 
+          }
+          setProfileLoading(false); 
+        }, (err) => {
+           // 靜默錯誤處理，避免干擾 UI
+        });
+        return () => unsub();
+      }, [user, isTeacher]);
+
+      React.useEffect(() => {
+        if (!user) return;
+
+        const studentsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'students');
+        const q = query(studentsRef); 
+        
+        const unsub = onSnapshot(q, (snapshot) => {
+          const studentsList = [];
+          snapshot.forEach((doc) => {
+            studentsList.push({ id: doc.id, ...doc.data() });
+          });
+          setStudents(studentsList);
+        }, (err) => {
+            // 靜默錯誤處理
+        });
+
+        return () => unsub();
+      }, [user]);
+
+      const handleJoin = async (name) => {
+        if (!user) return;
+        const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);
+        
+        const docSnap = await getDoc(userDocRef);
+        
+        if (!docSnap.exists()) {
+          await setDoc(userDocRef, {
+            name,
+            joinedAt: serverTimestamp(),
+            progress: { '2-1': [], '2-2': [], '2-3': [], '2-4': [] }
+          });
+        } else {
+            await updateDoc(userDocRef, { name });
+        }
+      };
+
+      // 如果發生 Auth 錯誤，優先顯示錯誤畫面
+      if (authError) {
+        return <ErrorScreen error={authError} />;
+      }
+
+      if (isTeacher) {
+        return <TeacherDashboard students={students} />;
+      }
+      
+      if (profileLoading && !isTeacher) {
+        return <LoadingScreen />;
+      }
+
+      if (!user || !userData) {
+        return <LoginScreen onJoin={handleJoin} isTeacher={isTeacher} setIsTeacher={setIsTeacher} authReady={!!user} />;
+      }
+
+      return <StudentView user={user} userData={userData} />;
+    };
+
+    // 渲染應用程式
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>

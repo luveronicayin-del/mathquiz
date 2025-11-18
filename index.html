@@ -13,20 +13,18 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- 3. 設定 Import Map (讓瀏覽器知道哪裡找 Firebase 和 Icon) -->
+  <!-- 3. 設定 Import Map (只保留 Firebase，移除圖示庫以增加穩定性) -->
   <script type="importmap">
     {
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js",
         "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js",
-        "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
       }
     }
   </script>
 
   <style>
-    /* 自定義動畫 */
     @keyframes shimmer {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
@@ -39,7 +37,7 @@
 <body class="bg-slate-950 text-slate-100">
   <div id="root"></div>
 
-  <!-- 4. 主要程式碼 (React 邏輯) -->
+  <!-- 4. 主要程式碼 -->
   <script type="text/babel" data-type="module">
     import { initializeApp } from 'firebase/app';
     import { 
@@ -49,7 +47,6 @@
     import { 
       getAuth, signInAnonymously, onAuthStateChanged 
     } from 'firebase/auth';
-    import { Trophy, User, BarChart3, CheckCircle2, Medal, Activity, Loader2, AlertCircle, ExternalLink, Globe } from 'lucide-react';
 
     // --- 設定區 ---
     const firebaseConfig = {
@@ -85,7 +82,7 @@
         <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 font-sans text-slate-100">
           <div className="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
             <div className="bg-blue-600 p-6 text-center">
-              <Activity className="w-12 h-12 text-white mx-auto mb-2" />
+              <div className="text-5xl mb-2">⚡</div>
               <h1 className="text-2xl font-bold text-white">數學作業衝刺賽</h1>
               <p className="text-blue-200 text-sm">2-1 至 2-4 進度追蹤</p>
             </div>
@@ -130,63 +127,40 @@
 
     const LoadingScreen = () => (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400">
-        <Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-500" />
+        <div className="text-4xl animate-spin mb-4">⏳</div>
         <p>正在恢復你的進度...</p>
+        <p className="text-xs text-slate-600 mt-2">如果卡住超過 5 秒，請檢查資料庫權限</p>
       </div>
     );
 
-    // 錯誤顯示畫面 (智慧判斷錯誤類型)
     const ErrorScreen = ({ error }) => {
-      const isDomainError = error.code === 'auth/unauthorized-domain';
-      const isConfigError = error.code === 'auth/configuration-not-found';
+      const isPermissionError = error.code === 'permission-denied' || (error.message && error.message.includes('Missing or insufficient permissions'));
       
       return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
           <div className="max-w-lg w-full bg-slate-900 border border-red-800 rounded-xl p-6 shadow-2xl">
             <div className="flex items-center gap-3 mb-4 text-red-500">
-              <AlertCircle className="w-8 h-8" />
-              <h2 className="text-xl font-bold">連線設定問題</h2>
+              <div className="text-3xl">⚠️</div>
+              <h2 className="text-xl font-bold">發生錯誤</h2>
             </div>
             <div className="space-y-4 text-slate-300">
-              <p>
-                Firebase 回傳錯誤：<code className="bg-red-900/30 px-2 py-1 rounded text-red-300 text-sm">{error.code}</code>
-              </p>
-
-              {isDomainError && (
+              <p>錯誤代碼：<code className="bg-red-900/30 px-2 py-1 rounded text-red-300 text-sm">{error.code || 'Unknown'}</code></p>
+              
+              {isPermissionError && (
                 <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
-                  <p className="font-bold text-white mb-2 flex items-center gap-2">
-                    <Globe className="w-4 h-4" />
-                    這是網域授權問題：
-                  </p>
-                  <p className="mb-2">因為您已將網站發布上線，必須告訴 Firebase 這個新網址是安全的。</p>
-                  <ol className="list-decimal list-inside space-y-2 text-slate-400 ml-1">
-                    <li>複製您現在瀏覽器網址列上的網域 (例如: <code>myapp.vercel.app</code>)。</li>
-                    <li>前往 <a href="https://console.firebase.google.com/project/math-smart1/authentication/settings" target="_blank" className="text-blue-400 underline">Firebase Authentication 設定</a>。</li>
-                    <li>點擊 <strong>Authorized domains (已授權網域)</strong>。</li>
-                    <li>點擊 <strong>Add domain</strong> 並貼上網址。</li>
-                  </ol>
-                </div>
-              )}
-
-              {isConfigError && (
-                <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
-                  <p className="font-bold text-white mb-2">需要開啟匿名登入：</p>
-                  <p>請前往 Firebase Console > Authentication > Sign-in method 開啟 Anonymous。</p>
+                  <p className="font-bold text-white mb-2">這是「資料庫權限」問題：</p>
+                  <p>請前往 Firebase Console > Firestore Database > Rules (規則)，將內容改成：</p>
+                  <pre className="bg-black p-2 mt-2 rounded text-green-400 overflow-x-auto">
+allow read, write: if request.auth != null;
+                  </pre>
                 </div>
               )}
               
-              {!isDomainError && !isConfigError && (
-                 <div className="bg-slate-800 p-4 rounded-lg text-sm border border-slate-700">
-                    <p>未知的錯誤，請檢查 Firebase 設定或重新整理。</p>
-                 </div>
+              {!isPermissionError && (
+                 <p>請將此畫面截圖給工程師。</p>
               )}
 
-              <button 
-                onClick={() => window.location.reload()}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                我已經設定好了，重新整理
-              </button>
+              <button onClick={() => window.location.reload()} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mt-4">重新整理</button>
             </div>
           </div>
         </div>
@@ -195,25 +169,20 @@
 
     const StudentView = ({ user, userData }) => {
       const [activeSection, setActiveSection] = React.useState('2-1');
-      
       const sections = ['2-1', '2-2', '2-3', '2-4'];
       const totalQuestionsPerSection = 24;
 
       const toggleQuestion = async (section, questionIndex) => {
         if (!user) return;
-        
         const currentSectionProgress = userData?.progress?.[section] || [];
         const isCompleted = currentSectionProgress.includes(questionIndex);
-        
         let newProgress = [...currentSectionProgress];
         if (isCompleted) {
           newProgress = newProgress.filter(i => i !== questionIndex);
         } else {
           newProgress.push(questionIndex);
         }
-
         const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);
-        
         await updateDoc(userDocRef, {
           [`progress.${section}`]: newProgress,
           lastUpdated: serverTimestamp()
@@ -230,7 +199,7 @@
           <header className="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-10 shadow-md">
             <div className="flex justify-between items-center max-w-3xl mx-auto">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-bold text-lg text-white">
                   {userData?.name?.[0] || '生'}
                 </div>
                 <div>
@@ -266,7 +235,7 @@
           <div className="flex-1 p-4 overflow-y-auto max-w-3xl mx-auto w-full">
             <div className="mb-6">
                <h3 className="text-slate-400 text-sm uppercase tracking-wider font-semibold mb-4 flex items-center">
-                 <CheckCircle2 className="w-4 h-4 mr-2" />
+                 <span className="mr-2">✅</span>
                  點擊完成的題目 ({activeSection})
                </h3>
                
@@ -321,9 +290,7 @@
         <div className="min-h-screen bg-slate-900 text-white p-6 overflow-hidden flex flex-col">
           <header className="mb-6 flex justify-between items-center bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-700">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-yellow-500 rounded-xl">
-                 <Trophy className="w-8 h-8 text-white" />
-              </div>
+              <div className="p-3 bg-yellow-500 rounded-xl text-2xl">🏆</div>
               <div>
                 <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500">
                   即時進度排行榜
@@ -349,13 +316,13 @@
               if (index === 0 && totalDone > 0) {
                 rankColor = "text-yellow-400";
                 bgColor = "bg-slate-800 border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]";
-                medal = <Medal className="w-6 h-6 text-yellow-400 fill-yellow-400/20" />;
+                medal = <span className="text-yellow-400">🥇</span>;
               } else if (index === 1 && totalDone > 0) {
                 rankColor = "text-slate-300";
-                medal = <Medal className="w-6 h-6 text-slate-300" />;
+                medal = <span className="text-slate-300">🥈</span>;
               } else if (index === 2 && totalDone > 0) {
                 rankColor = "text-orange-400";
-                medal = <Medal className="w-6 h-6 text-orange-400" />;
+                medal = <span className="text-orange-400">🥉</span>;
               }
 
               return (
@@ -425,26 +392,29 @@
       const [students, setStudents] = React.useState([]);
       const [isTeacher, setIsTeacher] = React.useState(false);
       const [profileLoading, setProfileLoading] = React.useState(true); 
-      const [authError, setAuthError] = React.useState(null); // 新增錯誤狀態
+      const [authError, setAuthError] = React.useState(null);
 
+      // 1. 登入處理
       React.useEffect(() => {
         const initAuth = async () => {
           try {
             await signInAnonymously(auth);
           } catch (err) {
-            // 不再顯示紅色錯誤訊息，直接設定錯誤狀態讓 UI 顯示引導
-            setAuthError(err); 
+            console.error("Auth Error:", err);
+            setAuthError(err);
           }
         };
         initAuth();
 
         const unsubscribe = onAuthStateChanged(auth, (u) => {
           setUser(u);
+          // 如果沒有使用者，也要結束 loading 讓畫面顯示登入頁
           if (!u) setProfileLoading(false); 
         });
         return () => unsubscribe();
       }, []);
 
+      // 2. 讀取個人資料 (含錯誤處理)
       React.useEffect(() => {
         if (!user || isTeacher) {
             if (isTeacher) setProfileLoading(false);
@@ -453,7 +423,17 @@
 
         setProfileLoading(true);
         const userDocRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'students', user.uid);
+        
+        // 安全機制：如果 10 秒還沒讀到資料，顯示超時錯誤
+        const timer = setTimeout(() => {
+             if (profileLoading) {
+                 setAuthError({ code: 'timeout', message: '連線逾時，請檢查網路或重新整理' });
+                 setProfileLoading(false);
+             }
+        }, 10000);
+
         const unsub = onSnapshot(userDocRef, (docSnap) => {
+          clearTimeout(timer); // 成功讀到資料，清除計時器
           if (docSnap.exists()) {
             setUserData(docSnap.data());
           } else {
@@ -461,11 +441,19 @@
           }
           setProfileLoading(false); 
         }, (err) => {
-           // 靜默錯誤處理，避免干擾 UI
+           clearTimeout(timer); // 發生錯誤，清除計時器
+           console.error("Snapshot Error:", err);
+           // 顯示錯誤給使用者看 (這就是您之前缺少的！)
+           setAuthError(err); 
+           setProfileLoading(false); 
         });
-        return () => unsub();
+        return () => {
+            unsub();
+            clearTimeout(timer);
+        };
       }, [user, isTeacher]);
 
+      // 3. 老師模式讀取所有學生
       React.useEffect(() => {
         if (!user) return;
 
@@ -478,9 +466,7 @@
             studentsList.push({ id: doc.id, ...doc.data() });
           });
           setStudents(studentsList);
-        }, (err) => {
-            // 靜默錯誤處理
-        });
+        }, (err) => console.error("Data fetch error:", err));
 
         return () => unsub();
       }, [user]);
@@ -502,7 +488,6 @@
         }
       };
 
-      // 如果發生 Auth 錯誤，優先顯示錯誤畫面
       if (authError) {
         return <ErrorScreen error={authError} />;
       }

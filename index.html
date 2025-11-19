@@ -523,8 +523,8 @@
     };
 
     // 渲染應用程式
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    // 修正：將 ReactDOM.createRoot 替換為 ReactDOM.render，以兼容 UMD CDN 載入方式。
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
 </body>
 </html>
